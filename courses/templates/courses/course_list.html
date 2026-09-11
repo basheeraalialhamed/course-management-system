@@ -1,0 +1,137 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+الدورات التدريبية
+{% endblock %}
+
+
+{% block content %}
+
+<div class="courses-page">
+
+    <div class="courses-header">
+
+        <div>
+
+            <!-- <span class="page-label">
+                الدورات التدريبية
+            </span> -->
+
+            <h1>
+                الدورات التدريبية
+            </h1>
+
+            <p>
+                استكشف الدورات المتاحة وابدأ رحلة التعلم.
+            </p>
+
+        </div>
+
+
+        {% if user.is_authenticated and user.profile.role == "courses_manager" %}
+
+            <a href="{% url 'course_create' %}"
+               class="add-course">
+
+                إضافة دورة
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if courses %}
+
+        <div class="courses-grid">
+
+            {% for course in courses %}
+
+                <div class="course-card">
+
+                    {% if course.image %}
+
+                        <img
+                            src="{{ course.image.url }}"
+                            alt="{{ course.title }}"
+                            class="course-image"
+                        >
+
+                    {% else %}
+
+                        <div class="course-image-placeholder">
+
+                            لا توجد صورة
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="course-content">
+
+                        <h2 class="course-title">
+                            {{ course.title }}
+                        </h2>
+
+
+                        <p class="course-description">
+
+                            {{ course.description|truncatewords:20 }}
+
+                        </p>
+
+
+                        <div class="course-footer">
+
+
+                            <span class="course-price">
+
+                                {{ course.price }}
+                                ريال
+
+                            </span>
+
+
+                            <a
+                                href="{% url 'course_detail' course.pk %}"
+                                class="details-button"
+                            >
+
+                                عرض التفاصيل
+
+                            </a>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <h2>
+                لا توجد دورات حاليًا
+            </h2>
+
+            <p>
+                لم تتم إضافة أي دورة إلى النظام حتى الآن.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

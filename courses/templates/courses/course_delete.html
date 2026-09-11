@@ -1,0 +1,70 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+حذف الدورة
+{% endblock %}
+
+{% block content %}
+
+<div class="delete-page">
+
+    <div class="delete-card">
+
+        <div class="delete-icon">
+            <i class="fa-solid fa-trash"></i>
+        </div>
+
+        <span class="page-label">
+            إدارة الدورات
+        </span>
+
+        <h1>
+            حذف الدورة
+        </h1>
+
+        <p class="delete-warning">
+            هل أنت متأكد من رغبتك في حذف الدورة التالية؟
+        </p>
+
+        <div class="course-to-delete">
+
+            <strong>
+                {{ course.title }}
+            </strong>
+
+            <span>
+                {{ course.description|truncatewords:20 }}
+            </span>
+
+        </div>
+
+        <p class="delete-note">
+            لا يمكن التراجع عن عملية الحذف بعد تنفيذها.
+        </p>
+
+
+        <form method="POST" class="delete-actions">
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="delete-confirm-button"
+            >
+                تأكيد حذف الدورة
+            </button>
+
+            <a
+                href="{% url 'course_detail' course.pk %}"
+                class="delete-cancel-button"
+            >
+                إلغاء
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+تعديل الدورة
+{% endblock %}
+
+{% block content %}
+
+<div class="form-page">
+
+    <div class="form-card">
+
+        <div class="page-header">
+
+            <span class="page-label">
+                إدارة الدورات
+            </span>
+
+            <h1>
+                تعديل الدورة
+            </h1>
+
+            <p>
+                قم بتعديل بيانات الدورة التدريبية.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="error-message">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="title">
+                    اسم الدورة
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value="{{ course.title }}"
+                    required
+                >
+
+            </div>
+            <div class="form-group">
+
+                <label for="description">
+                    وصف الدورة
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    required
+                >{{ course.description }}</textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="price">
+                    سعر الدورة
+                </label>
+
+                <div class="price-input">
+
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        value="{{ course.price }}"
+                        step="0.01"
+                        min="0"
+                        required
+                    >
+
+                    <span>
+                        ريال
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="image">
+                    صورة الدورة
+                </label>
+
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                >
+
+
+                {% if course.image %}
+
+                    <div class="current-image">
+
+                        <p>
+                            الصورة الحالية:
+                        </p>
+
+                        <img
+                            src="{{ course.image.url }}"
+                            alt="{{ course.title }}"
+                        >
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    حفظ التعديلات
+                </button>
+
+                <a
+                    href="{% url 'course_detail' course.pk %}"
+                    class="btn-secondary"
+                >
+                    إلغاء
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

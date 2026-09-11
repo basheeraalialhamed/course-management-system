@@ -1,0 +1,103 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+تسجيل الدخول | نظام الدورات
+{% endblock %}
+
+{% block content %}
+
+<div class="login-page">
+
+    <div class="login-box">
+
+        <div class="login-header">
+
+            <h1>
+                تسجيل الدخول
+            </h1>
+
+            <p>
+                مرحبًا بك في نظام الدورات
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="login-error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="login-form-group">
+
+                <label for="username">
+                    اسم المستخدم
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="أدخل اسم المستخدم"
+                    required
+                >
+
+            </div>
+
+
+            <div class="login-form-group">
+
+                <label for="password">
+                    كلمة المرور
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="أدخل كلمة المرور"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+                تسجيل الدخول
+            </button>
+
+        </form>
+
+
+        <div class="register-link">
+
+            ليس لديك حساب؟
+
+            <a href="{% url 'register' %}">
+                إنشاء حساب جديد
+            </a>
+
+        </div>
+
+
+        <div class="login-footer">
+            نظام إدارة الدورات التدريبية
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

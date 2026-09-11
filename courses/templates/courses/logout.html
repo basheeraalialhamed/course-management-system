@@ -1,0 +1,59 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+تسجيل الخروج | نظام الدورات
+{% endblock %}
+
+{% block content %}
+
+<div class="logout-page">
+
+    <div class="logout-box">
+
+        <h1>
+            تسجيل الخروج
+        </h1>
+
+        <p>
+            هل أنت متأكد من رغبتك في تسجيل الخروج من نظام الدورات؟
+        </p>
+
+
+        <div class="logout-buttons">
+
+            <form
+                method="POST"
+                class="logout-form"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="logout-button"
+                >
+                    تسجيل الخروج
+                </button>
+
+            </form>
+
+
+            <a
+                href="{% url 'course_list' %}"
+                class="cancel-button"
+            >
+                إلغاء
+            </a>
+
+        </div>
+
+
+        <div class="logout-footer">
+            نظام إدارة الدورات التدريبية
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

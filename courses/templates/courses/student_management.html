@@ -1,0 +1,123 @@
+{% extends "courses/base.html" %}
+
+{% block content %}
+
+<div class="student-management">
+
+    <h1>إدارة الطلاب</h1>
+    <div class="search-box">
+
+        <form method="get">
+
+            
+
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="ابحث باسم الطالب أو البريد الإلكتروني"
+            >
+                
+            {% if search %}
+                <a href="{% url 'student_management' %}">
+                    ×  
+                </a>
+            {% endif %}
+            
+            
+
+            <button type="submit">
+                بحث
+            </button>
+
+            
+
+        </form>
+
+    </div>
+
+    {% if students %}
+
+        {% for student in students %}
+
+            <div class="student-card">
+
+                <h2>
+                    {{ student.username }}
+                </h2>
+
+                <p>
+                    <strong>البريد الإلكتروني:</strong>
+                    {{ student.email|default:"غير محدد" }}
+                </p>
+
+
+                <h3>
+                    التسجيلات
+                </h3>
+
+                {% if student.enrollments.all %}
+
+                    {% for enrollment in student.enrollments.all %}
+
+                        <div class="enrollment-item">
+
+                            <p>
+                                <strong>الدورة:</strong>
+                                {{ enrollment.course.title }}
+                            </p>
+
+                            <p>
+                                <strong>تاريخ الطلب:</strong>
+                                {{ enrollment.enrolled_at|date:"Y-m-d" }}
+                            </p>
+
+                            <p>
+                                <strong>الحالة:</strong>
+
+                                {% if enrollment.status == "pending" %}
+                                    قيد المراجعة
+
+                                {% elif enrollment.status == "approved" %}
+                                    مقبول
+
+                                {% elif enrollment.status == "rejected" %}
+                                    مرفوض
+                                {% endif %}
+
+                            </p>
+
+                        </div>
+
+                    {% empty %}
+
+                        <p>
+                            لا توجد تسجيلات لهذا الطالب.
+                        </p>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>
+                        لا توجد تسجيلات لهذا الطالب.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            لا يوجد طلاب مطابقون للبحث.
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

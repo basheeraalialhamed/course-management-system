@@ -1,0 +1,393 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+إدارة التسجيلات
+{% endblock %}
+
+{% block content %}
+
+<div class="enrollment-management-page">
+
+    <div class="page-header">
+
+        <span class="page-label">
+            لوحة مدير الدورات
+        </span>
+
+        <h1>
+            إدارة التسجيلات
+        </h1>
+
+        <p>
+            إدارة طلبات تسجيل الطلاب ومتابعة حالاتهم في الدورات.
+        </p>
+
+    </div>
+
+
+    <!-- البحث والفلترة -->
+
+    <div class="enrollment-search-card">
+
+        <form method="get" class="enrollment-search-form">
+
+            <div class="search-field">
+
+                <label for="search">
+                    البحث
+                </label>
+
+                <input
+                    type="text"
+                    id="search"
+                    name="search"
+                    value="{{ search }}"
+                    placeholder="ابحث باسم الطالب أو اسم الدورة"
+                >
+
+            </div>
+
+            <div class="search-actions">
+                {% if search or selected_course %}
+
+                    <a
+                        href="{% url 'enrollment_management' %}"
+                        class="clear-button"
+                    >
+                        ×
+                    </a>
+
+                {% endif %}
+
+                <button
+                    type="submit"
+                    class="gradient-button"
+                >
+                    بحث
+                </button>
+
+
+                
+
+            </div>
+
+        </form>
+
+    </div>
+
+    {% if searched_courses %}
+
+        <div class="searched-courses-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <span class="section-label">
+                        نتائج البحث
+                    </span>
+
+                    <h2>
+                        الدورات المطابقة
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="searched-courses-list">
+
+                {% for course in searched_courses %}
+
+                    <div class="searched-course-card">
+
+                        <div class="searched-course-main">
+
+                            <h3>
+                                {{ course.title }}
+                            </h3>
+
+                            <p>
+                                {{ course.description|truncatewords:15 }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="course-registration-count">
+
+                            <strong>
+                                {{ course.enrollment_count }}
+                            </strong>
+
+                            <span>
+                                عدد الطلبات
+                            </span>
+
+                        </div>
+
+
+                        <div class="searched-students">
+
+                            <h4>
+                                الطلاب
+                            </h4>
+
+                            {% for enrollment in course.enrollments.all %}
+
+                                <div class="searched-student">
+
+                                    <span>
+                                        {{ enrollment.student.username }}
+                                    </span>{% if enrollment.status == "pending" %}
+
+                                        <span class="status-badge status-pending">
+                                            قيد المراجعة
+                                        </span>
+
+                                    {% elif enrollment.status == "approved" %}
+
+                                        <span class="status-badge status-approved">
+                                            مقبول
+                                        </span>
+
+                                    {% elif enrollment.status == "rejected" %}
+
+                                        <span class="status-badge status-rejected">
+                                            مرفوض
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% empty %}
+
+                                <p class="no-students">
+                                    لا يوجد طلاب مسجلون في هذه الدورة.
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- جميع التسجيلات -->
+
+    <div class="enrollment-list-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <span class="section-label">
+                    التسجيلات
+                </span>
+
+                <h2>
+                    جميع طلبات التسجيل
+                </h2>
+
+            </div>
+
+            <span class="total-enrollments">
+                {{ enrollments|length }} طلب
+            </span>
+
+        </div>
+
+
+        {% if enrollments %}
+
+            <div class="enrollments-table">
+
+                <div class="enrollment-table-header">
+
+                    <span>
+                        الطالب
+                    </span>
+
+                    <span>
+                        الدورة
+                    </span>
+
+                    <span>
+                        تاريخ الطلب
+                    </span>
+
+                    <span>
+                        الحالة
+                    </span>
+
+                    <span>
+                        الإجراءات
+                    </span>
+
+                </div>
+
+
+                {% for enrollment in enrollments %}
+
+                    <div class="enrollment-table-row">
+
+                        <!-- الطالب -->
+
+                        <div class="enrollment-student">
+
+                            <strong>
+                                {{ enrollment.student.username }}
+                            </strong>
+
+                            <span>
+                                {{ enrollment.student.email|default:"لا يوجد بريد إلكتروني" }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- الدورة -->
+
+                        <div class="enrollment-course">
+
+                            <strong>
+                                {{ enrollment.course.title }}
+                            </strong>
+
+                            <a
+                                href="{% url 'course_detail' enrollment.course.pk %}"
+                            >
+                                عرض الدورة
+                            </a>
+
+                        </div>
+
+
+                        <!-- التاريخ -->
+
+                        <div class="enrollment-date">
+
+                            <strong>
+                                {{ enrollment.enrolled_at|date:"Y-m-d" }}
+                            </strong>
+
+                            <span>
+                                تاريخ الطلب
+                            </span>
+
+                        </div>
+
+
+                        <!-- الحالة -->
+
+                        <div class="enrollment-status">
+
+                            {% if enrollment.status == "pending" %}<span class="status-badge status-pending">
+                                    قيد المراجعة
+                                </span>
+
+                            {% elif enrollment.status == "approved" %}
+
+                                <span class="status-badge status-approved">
+                                    مقبول
+                                </span>
+
+                            {% elif enrollment.status == "rejected" %}
+
+                                <span class="status-badge status-rejected">
+                                    مرفوض
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- الإجراءات -->
+
+                        <div class="enrollment-actions">
+
+                            {% if enrollment.status == "pending" %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'enrollment_approve' enrollment.pk %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="action-button aapprove-button"
+                                    >
+                                        قبول
+                                    </button>
+
+                                </form>
+
+
+                                <form
+                                    method="post"
+                                    action="{% url 'enrollment_reject' enrollment.pk %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="action-button reject-button"
+                                    >
+                                        رفض
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+                            <a
+                                href="{% url 'enrollment_delete' enrollment.pk %}"
+                                class="delete-button"
+                            >
+                                حذف
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h3>
+                    لا توجد طلبات تسجيل
+                </h3>
+
+                <p>
+                    لا توجد تسجيلات مطابقة للبحث الحالي.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

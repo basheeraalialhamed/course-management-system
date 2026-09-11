@@ -1,0 +1,241 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+لوحة مدير الدورات
+{% endblock %}
+
+{% block content %}
+
+<div class="manager-dashboard">
+
+    <div class="page-header">
+
+        <span class="page-label">
+            لوحة التحكم
+        </span>
+
+        <h1>
+            لوحة مدير الدورات
+        </h1>
+
+        <p>
+            نظرة عامة على الدورات والطلاب وطلبات التسجيل.
+        </p>
+
+    </div>
+
+
+    <!-- الإحصائيات -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                إجمالي الدورات
+            </span>
+
+            <strong class="stat-number">
+                {{ total_courses }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                إجمالي الطلاب
+            </span>
+
+            <strong class="stat-number">
+                {{ total_students }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-title">
+                طلبات التسجيل
+            </span>
+
+            <strong class="stat-number">
+                {{ total_enrollments }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card pending-card">
+
+            <span class="stat-title">
+                قيد المراجعة
+            </span>
+
+            <strong class="stat-number">
+                {{ pending_enrollments }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card approved-card">
+
+            <span class="stat-title">
+                الطلبات المقبولة
+            </span>
+
+            <strong class="stat-number">
+                {{ approved_enrollments }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card rejected-card">
+
+            <span class="stat-title">
+                الطلبات المرفوضة
+            </span>
+
+            <strong class="stat-number">
+                {{ rejected_enrollments }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- الإجراءات السريعة -->
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <h2>
+                الإجراءات السريعة
+            </h2>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+            <a
+                href="{% url 'course_create' %}"
+                class="gradient-button"
+            >
+                إضافة دورة
+            </a>
+
+
+            <a
+                href="{% url 'enrollment_management' %}"
+                class="gradient-button"
+            >
+                إدارة التسجيلات
+            </a>
+
+
+            <a
+                href="{% url 'student_management' %}"
+                class="gradient-button"
+            >
+                إدارة الطلاب
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <h2>
+                آخر طلبات التسجيل
+            </h2>
+
+            <a
+                href="{% url 'enrollment_management' %}"
+                class="view-all"
+            >
+                عرض الكل
+            </a>
+
+        </div>
+
+
+        {% if enrollments %}
+
+            <div class="recent-enrollments">
+
+                {% for enrollment in enrollments|slice:":5" %}
+
+                    <div class="recent-enrollment">
+
+                        <div>
+
+                            <strong>
+                                {{ enrollment.student.username }}
+                            </strong>
+
+                            <span>
+                                {{ enrollment.course.title }}
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            {% if enrollment.status == "pending" %}
+
+                                <span class="status-badge status-pending">
+                                    قيد المراجعة
+                                </span>
+
+                            {% elif enrollment.status == "approved" %}<span class="status-badge status-approved">
+                                    مقبول
+                                </span>
+
+                            {% elif enrollment.status == "rejected" %}
+
+                                <span class="status-badge status-rejected">
+                                    مرفوض
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h3>
+                    لا توجد طلبات تسجيل
+                </h3>
+
+                <p>
+                    لم يتم إرسال أي طلب تسجيل حتى الآن.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+{{ course.title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="detail-page">
+
+    <div class="course-detail-card">
+
+        <div class="course-image-section">
+
+            {% if course.image %}
+
+                <img
+                    src="{{ course.image.url }}"
+                    alt="{{ course.title }}"
+                    class="course-detail-image"
+                >
+
+            {% else %}
+
+                <div class="no-image">
+                    لا توجد صورة للدورة
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="course-info">
+
+            <div class="course-label">
+                دورة تدريبية
+            </div>
+
+            <h1>
+                {{ course.title }}
+            </h1>
+
+            <div class="divider"></div>
+
+            <h3>
+                وصف الدورة
+            </h3>
+
+            <p class="description">
+                {{ course.description }}
+            </p>
+
+
+            <!-- معلومات إضافية -->
+            <div class="course-meta">
+
+                <div class="meta-box">
+
+                    <span class="meta-title">
+                        السعر
+                    </span>
+
+                    <span class="price">
+                        {{ course.price }} ريال
+                    </span>
+
+                </div>
+
+
+                <div class="meta-box">
+
+                    <span class="meta-title">
+                        تاريخ الإضافة
+                    </span>
+
+                    <span class="date">
+                        {{ course.created_at|date:"Y-m-d" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+
+    {% if user.is_authenticated and user.profile.role == "student" %}
+
+        <form
+            method="post"
+            action="{% url 'enroll_course' course.pk %}"
+            class="enroll-form"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn-enroll"
+            >
+                التسجيل في الدورة
+            </button>
+
+        </form>
+
+    {% endif %}
+
+
+    {% if user.is_authenticated and user.profile.role == "courses_manager" %}
+
+        
+
+        <a
+            href="{% url 'course_update' course.pk %}"
+            class="btn-edit"
+        >
+            تعديل الدورة
+        </a>
+
+        <a
+            href="{% url 'course_delete' course.pk %}"
+            class="btn-delete"
+        >
+            حذف الدورة
+        </a>
+
+        <a
+            href="{% url 'course_create' %}"
+            class="btn-back"
+        >
+            ➕ اضفة كورس
+        </a>
+
+    {% endif %}
+
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

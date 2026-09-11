@@ -1,0 +1,132 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+لوحة الطالب
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="page-header">
+
+        <span class="page-label">
+            لوحة الطالب
+        </span>
+
+        <h1>
+            مرحبًا، {{ user.username }}
+        </h1>
+
+        <p>
+            تابع طلبات التسجيل الخاصة بك وحالة كل دورة.
+        </p>
+
+    </div>
+
+
+    {% if messages %}
+
+        <div class="messages">
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    {% if enrollments %}
+
+        <div class="student-courses">
+
+            {% for enrollment in enrollments %}
+
+                <div class="student-course-card">
+
+                    <div class="student-course-info">
+
+                        <h2>
+                            {{ enrollment.course.title }}
+                        </h2>
+
+                        <p>
+                            {{ enrollment.course.description|truncatewords:20 }}
+                        </p>
+
+                        <span class="student-course-price">
+                            {{ enrollment.course.price }} ريال
+                        </span>
+
+                    </div>
+
+
+                    <div class="student-course-status">
+
+                        {% if enrollment.status == "pending" %}
+
+                            <span class="status-badge status-pending">
+                                قيد المراجعة
+                            </span>
+
+                        {% elif enrollment.status == "approved" %}
+
+                            <span class="status-badge status-approved">
+                                مقبول
+                            </span>
+
+                        {% elif enrollment.status == "rejected" %}
+
+                            <span class="status-badge status-rejected">
+                                مرفوض
+                            </span>
+
+                        {% endif %}
+
+                        <a
+                            href="{% url 'course_detail' enrollment.course.pk %}"
+                            class="details-button"
+                        >
+                            عرض الدورة
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <h2>
+                لا توجد طلبات تسجيل
+            </h2>
+
+            <p>
+                لم ترسل أي طلب تسجيل في دورة حتى الآن.
+            </p>
+
+            <a
+                href="{% url 'course_list' %}"
+                class="details-button"
+            >
+                استعراض الدورات
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

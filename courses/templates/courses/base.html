@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+       نظام الدورات
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet"
+          href="{% static 'courses/css/style.css' %}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="{% url 'course_list' %}" class="brand">
+            نظام الدورات الإلكترونية 
+        </a>
+
+        <div class="nav-links">
+
+            <a href="{% url 'course_list' %}">
+                الدورات
+            </a>
+
+            {% if user.is_authenticated %}
+
+                <span class="user-name">
+                    مرحبًا،    {{ user.username }}
+                </span>
+
+                {% if user.profile.role == "courses_manager" %}
+
+                    <a href="{% url 'courses_manager_dashboard' %}">
+                        لوحة مدير الدورات
+                    </a>
+
+                {% endif %}
+
+                {% if user.profile.role == "student" %}
+
+                    <a href="{% url 'student_dashboard' %}">
+                        لوحة الطالب
+                    </a>
+
+                {% endif %}
+
+                <a href="{% url 'logout' %}">
+                    تسجيل الخروج
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">
+                    تسجيل الدخول
+                </a>
+
+                <a href="{% url 'register' %}">
+                    إنشاء حساب
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <main class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <footer class="footer">
+
+        نظام إدارة الدورات التدريبية
+
+    </footer>
+
+</body>
+
+</html>

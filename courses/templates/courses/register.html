@@ -1,0 +1,126 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+إنشاء حساب | نظام الدورات
+{% endblock %}
+
+{% block content %}
+
+<div class="register-page">
+
+    <div class="register-container">
+
+        <div class="register-header">
+
+            <h1>
+                نظام الدورات
+            </h1>
+
+            <p>
+                إنشاء حساب جديد
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="register-error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="register-form-group">
+
+                <label for="username">
+                    اسم المستخدم
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="أدخل اسم المستخدم"
+                    required
+                >
+
+            </div>
+
+            <div class="register-form-group">
+
+                <label for="email">
+                    البريد الإلكتروني
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="example@email.com"
+                >
+
+            </div>
+
+            <div class="register-form-group">
+
+                <label for="password">
+                    كلمة المرور
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="أدخل كلمة المرور"
+                    required
+                >
+
+            </div>
+
+            <div class="register-form-group">
+
+                <label for="password2">
+                    تأكيد كلمة المرور
+                </label>
+
+                <input
+                    type="password"
+                    id="password2"
+                    name="password2"
+                    placeholder="أعد إدخال كلمة المرور"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="register-button"
+            >
+                إنشاء الحساب
+            </button>
+
+        </form>
+
+
+        <div class="login-link">
+
+            لديك حساب بالفعل؟
+
+            <a href="{% url 'login' %}">
+                تسجيل الدخول
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

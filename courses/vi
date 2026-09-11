@@ -1,0 +1,331 @@
+# from django.shortcuts import get_object_or_404 ,redirect,render
+# from .models import Course,Profile
+# from decimal import Decimal,InvalidOperation
+# from django.contrib.auth.models import User
+# # from django.contrib.auth import login
+# from django.contrib.auth import authenticate, login ,logout
+# # from django.contrib.auth import logout
+
+
+# def course_list(request):
+#     courses = Course.objects.all()
+
+#     return render(request, "courses/course_list.html", {
+#         "courses": courses
+#     })
+
+# def course_detail(request, pk):
+#     course = get_object_or_404(Course, pk=pk)
+
+#     return render(request, "courses/course_detail.html", {
+#         "course": course
+#     })
+    
+# def course_create(request):
+#     if request.method == "POST":
+#         title = request.POST.get("title")
+#         description = request.POST.get("description")
+#         price = request.POST.get("price")
+#         image = request.FILES.get("image")
+
+#         try:
+#             price = Decimal(price)
+#         except (InvalidOperation, TypeError):
+#             return render(request, "courses/course_create.html", {
+#                 "error": "السعر يجب أن يكون رقمًا صحيحًا."
+#             })
+
+#         Course.objects.create(
+#             title=title,
+#             description=description,
+#             price=price,
+#             image=image
+#         )
+
+#         return redirect("course_list")
+
+#     return render(request, "courses/course_create.html")
+
+# def course_update(request, pk):
+#     course = get_object_or_404(Course, pk=pk)
+
+#     if request.method == "POST":
+#         course.title = request.POST["title"]
+#         course.description = request.POST["description"]
+#         course.price = request.POST["price"]
+
+#         if request.FILES.get("image"):
+#             course.image = request.FILES.get("image")
+
+#         course.save()
+
+#         return redirect("course_detail", pk=course.pk)
+
+#     return render(request, "courses/course_update.html", {
+#         "course": course
+#     })
+
+# def course_delete(request, pk):
+#     course = get_object_or_404(Course, pk=pk)
+
+#     if request.method == "POST":
+#         course.delete()
+
+#         return redirect("course_list")
+
+#     return render(request, "courses/course_delete.html", {
+#         "course": course
+#     })
+
+
+
+# def register(request):
+
+#     if request.method == "POST":
+
+#         username = request.POST.get("username")
+#         email = request.POST.get("email")
+#         password = request.POST.get("password")
+#         password2 = request.POST.get("password2")
+
+#         if password != password2:
+#             return render(
+#                 request,
+#                 "courses/register.html",
+#                 {"error": "كلمتا المرور غير متطابقتين."}
+#             )
+
+#         if User.objects.filter(username=username).exists():
+#             return render(
+#                 request,
+#                 "courses/register.html",
+#                 {"error": "اسم المستخدم موجود بالفعل."}
+#             )
+
+#         user = User.objects.create_user(
+#             username=username,
+#             email=email,
+#             password=password
+#         )
+
+#         login(request, user)
+
+#         return redirect("course_list")
+
+#     return render(request, "courses/register.html")
+
+
+
+# def user_login(request):
+
+#     if request.method == "POST":
+
+#         username = request.POST.get("username")
+#         password = request.POST.get("password")
+
+#         user = authenticate(
+#             request,
+#             username=username,
+#             password=password
+#         )
+
+#         if user is not None:
+
+#             login(request, user)
+
+#             return redirect("course_list")
+
+#         else:
+
+#             return render(
+#                 request,
+#                 "courses/login.html",
+#                 {"error": "اسم المستخدم أو كلمة المرور غير صحيحة."}
+#             )
+
+#     return render(request, "courses/login.html")
+
+
+# def user_logout(request):
+#     logout(request)
+
+#     return redirect("course_list")
+
+# <!-- <!DOCTYPE html>
+# <html lang="ar" dir="rtl">
+# <head>
+#     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+#     <meta charset="UTF-8">
+#     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+#     <title>{% block title %}نظام الدورات{% endblock %}</title>
+
+#     <style>
+#         * {
+#             box-sizing: border-box;
+#             margin: 0;
+#             padding: 0;
+#         }
+
+#         body {
+#             font-family: Arial, sans-serif;
+#             background: #f5f7fb;
+#             color: #1f2937;
+#             min-height: 100vh;
+#         }
+
+#         .navbar {
+#             background: #ffffff;
+#             border-bottom: 1px solid #e5e7eb;
+#             padding: 16px 6%;
+#             display: flex;
+#             align-items: center;
+#             justify-content: space-between;
+#             gap: 20px;
+#         }
+
+#         .brand {
+#             text-decoration: none;
+#             color: #2563eb;
+#             font-size: 22px;
+#             font-weight: bold;
+#         }
+
+#         .nav-links {
+#             display: flex;
+#             align-items: center;
+#             gap: 10px;
+#             flex-wrap: wrap;
+#         }
+
+#         .nav-links a {
+#             text-decoration: none;
+#             color: #374151;
+#             padding: 9px 14px;
+#             border-radius: 8px;
+#             transition: 0.2s;
+#         }
+
+#         .nav-links a:hover {
+#             background: #eff6ff;
+#             color: #2563eb;
+#         }
+
+#         .nav-button {
+#             border: none;
+#             background: #dc2626;
+#             color: white;
+#             padding: 9px 15px;
+#             border-radius: 8px;
+#             cursor: pointer;
+#             font-size: 14px;
+#         }
+
+#         .nav-button:hover {
+#             background: #b91c1c;
+#         }
+
+#         .user-name {
+#             color: #2563eb;
+#             font-weight: bold;
+#             padding: 9px 14px;
+#         }
+
+#         .container {
+#             width: 88%;
+#             max-width: 1200px;
+#             margin: 40px auto;
+#         }
+
+#         .footer {
+#             text-align: center;
+#             color: #6b7280;
+#             padding: 25px;
+#             margin-top: 50px;
+#             border-top: 1px solid #e5e7eb;
+#         }
+
+#         @media (max-width: 700px) {
+#             .navbar {
+#                 flex-direction: column;
+#                 align-items: stretch;
+#                 text-align: center;
+#             }
+
+#             .nav-links {
+#                 justify-content: center;
+#             }
+
+#             .container {
+#                 width: 94%;
+#                 margin-top: 25px;
+#             }
+#         }
+#     </style>
+# </head>
+
+# <body>
+
+#     <nav class="navbar">
+
+#         <a href="{% url 'course_list' %}" class="brand">
+#             نظام الدورات
+#         </a>
+
+#         <div class="nav-links">
+
+#             <a href="{% url 'course_list' %}">
+#                 الدورات
+#             </a>
+
+#             {% if user.is_authenticated %}
+
+#                 <span class="user-name">
+#                     مرحبًا، {{ user.username }}
+#                 </span>
+
+#                 <a href="{% url 'logout' %}">
+#                     تسجيل الخروج
+#                 </a>
+#                 {% if user.profile.role == "courses_manager" %}
+#                         <a href="{% url 'courses_manager_dashboard' %}">
+#                             لوحة مدير الدورات
+#                         </a>
+#                     {% endif %}
+#                 {% if user.profile.role == "student" %}
+#                     <a href="{% url 'student_dashboard' %}">
+#                         لوحة الطالب
+#                     </a>
+#                 {% endif %}
+
+#             {% else %}
+
+#                 <a href="{% url 'login' %}">
+#                     تسجيل الدخول
+#                 </a>
+
+#                 <a href="{% url 'register' %}">
+#                     إنشاء حساب
+#                 </a>
+
+#             {% endif %}
+
+#         </div>
+
+#     </nav>
+
+
+#     <main class="container">
+
+#         {% block content %}
+#         {% endblock %}
+
+#     </main>
+
+
+#     <footer class="footer">
+#         نظام إدارة الدورات التدريبية
+#     </footer>
+
+# </body>
+# </html> -->

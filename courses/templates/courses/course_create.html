@@ -1,0 +1,149 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+إضافة دورة جديدة
+{% endblock %}
+
+{% block content %}
+
+<div class="create-page">
+
+    <div class="create-header">
+
+        <span class="page-label">
+            إدارة الدورات
+        </span>
+
+        <h1>
+            إضافة دورة جديدة
+        </h1>
+
+        <p>
+            أدخل بيانات الدورة بشكل صحيح لإضافتها إلى المنصة.
+        </p>
+
+    </div>
+
+
+
+    {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <!-- نموذج إضافة الدورة -->
+
+    <div class="form-card">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="title">
+                    اسم الدورة
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="اسم الكورس"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="description">
+                    وصف الدورة
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="اكتب وصفًا مختصرًا وواضحًا عن محتوى الدورة..."
+                    required
+                ></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="price">
+                    سعر الدورة
+                </label>
+
+                <div class="price-input">
+
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        step="0.01"
+                        min="0"
+                        placeholder="مثال: 5000"
+                        required
+                    >
+
+                    <span>
+                        ريال
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="image">
+                    صورة الدورة
+                </label>
+
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                >
+
+                <small>
+                    يفضل اختيار صورة واضحة ومرتبطة بمحتوى الدورة.
+                </small>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    إضافة الدورة
+                </button>
+
+                <a
+                    href="{% url 'course_list' %}"
+                    class="btn-secondary"
+                >
+                    إلغاء
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

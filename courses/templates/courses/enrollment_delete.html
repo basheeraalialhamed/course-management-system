@@ -1,0 +1,108 @@
+{% extends "courses/base.html" %}
+
+{% block title %}
+حذف التسجيل
+{% endblock %}
+
+{% block content %}
+
+<div class="enrollment-delete-page">
+
+    <div class="enrollment-delete-card">
+
+        <div class="delete-header">
+
+            <span>
+                تأكيد العملية
+            </span>
+
+            <h1>
+                حذف التسجيل
+            </h1>
+
+            <p>
+                هل أنت متأكد من حذف هذا التسجيل؟
+            </p>
+
+        </div>
+
+
+        <div class="delete-details">
+
+            <div class="detail-item">
+
+                <span>
+                    الطالب
+                </span>
+
+                <strong>
+                    {{ enrollment.student.username }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    الدورة
+                </span>
+
+                <strong>
+                    {{ enrollment.course.title }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    الحالة
+                </span>
+
+                <strong>
+                    {{ enrollment.get_status_display }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="delete-notice">
+
+            سيتم حذف هذا التسجيل نهائيًا ولا يمكن التراجع عن العملية.
+
+        </div>
+
+
+        <form
+            method="post"
+            class="delete-actions"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="delete-confirm-btn"
+            >
+                حذف التسجيل
+            </button>
+
+
+            <a
+                href="{% url 'enrollment_management' %}"
+                class="delete-cancel-btn"
+            >
+                إلغاء
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
